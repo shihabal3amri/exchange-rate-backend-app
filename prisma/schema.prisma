@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  AED
+  AFN
+  ALL
+  AMD
+  ANG
+  AOA
+  ARS
+  AUD
+  AWG
+  AZN
+  BAM
+  BBD
+  BDT
+  BGN
+  BHD
+  BIF
+  BMD
+  BND
+  BOB
+  BRL
+  BSD
+  BTN
+  BWP
+  BYN
+  BZD
+  CAD
+  CDF
+  CHF
+  CLP
+  CNY
+  COP
+  CRC
+  CUP
+  CVE
+  CZK
+  DJF
+  DKK
+  DOP
+  DZD
+  EGP
+  ERN
+  ETB
+  EUR
+  FJD
+  FKP
+  FOK
+  GBP
+  GEL
+  GGP
+  GHS
+  GIP
+  GMD
+  GNF
+  GTQ
+  GYD
+  HKD
+  HNL
+  HRK
+  HTG
+  HUF
+  IDR
+  ILS
+  IMP
+  INR
+  IQD
+  IRR
+  ISK
+  JEP
+  JMD
+  JOD
+  JPY
+  KES
+  KGS
+  KHR
+  KID
+  KMF
+  KRW
+  KWD
+  KYD
+  KZT
+  LAK
+  LBP
+  LKR
+  LRD
+  LSL
+  LYD
+  MAD
+  MDL
+  MGA
+  MKD
+  MMK
+  MNT
+  MOP
+  MRU
+  MUR
+  MVR
+  MWK
+  MXN
+  MYR
+  MZN
+  NAD
+  NGN
+  NIO
+  NOK
+  NPR
+  NZD
+  OMR
+  PAB
+  PEN
+  PGK
+  PHP
+  PKR
+  PLN
+  PYG
+  QAR
+  RON
+  RSD
+  RUB
+  RWF
+  SAR
+  SBD
+  SCR
+  SDG
+  SEK
+  SGD
+  SHP
+  SLE
+  SLL
+  SOS
+  SRD
+  SSP
+  STN
+  SYP
+  SZL
+  THB
+  TJS
+  TMT
+  TND
+  TOP
+  TRY
+  TTD
+  TVD
+  TWD
+  TZS
+  UAH
+  UGX
+  USD
+  UYU
+  UZS
+  VES
+  VND
+  VUV
+  WST
+  XAF
+  XCD
+  XDR
+  XOF
+  XPF
+  YER
+  ZAR
+  ZMW
+  ZWL
+}
+
+// Conversion rate table to save OMR conversion rates to all currencies
+model ConversionRate {
+  id           String   @id @default(uuid())
+  fromCurrency Currency @map("from_currency")
+  toCurrency   Currency @map("to_currency")
+  rate         Float
+  timestamp    DateTime @default(now()) @map("timestamp_at")
+  updatedAt    DateTime @default(now()) @map("updated_at")
+
+  @@map("conversion_rate")
+  @@index([timestamp], name: "idx_conversion_rate_timestamp")
+}
+
+// User conversion table to save all user conversions
+model UserConversion {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  fromCurrency Currency @map("from_currency")
+  toCurrency   Currency @map("to_currency")
+  amount       Float
+  rate         Float
+  timestamp    DateTime @default(now()) @map("timestamp_at")
+  updatedAt    DateTime @default(now()) @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_conversion")
+  @@index([timestamp], name: "idx_user_conversion_timestamp")
+  @@index([userId], name: "idx_user_conversion_userId")
+}
+
+model Schedule {
+  id             String   @id @default(uuid())
+  name           String
+  cronExpression String   @map("cron_expression")
+  timestamp      DateTime @default(now()) @map("timestamp_at")
+  updatedAt      DateTime @default(now()) @map("updated_at")
+
+  @@map("schedule")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  username        String           @unique
+  email           String           @unique
+  password        String
+  userConversions UserConversion[]
+  refreshToken    String?          @map("refresh_token")
+  timestamp      DateTime @default(now()) @map("timestamp_at")
+  updatedAt      DateTime @default(now()) @map("updated_at")
+
+  @@map("user")
+}
