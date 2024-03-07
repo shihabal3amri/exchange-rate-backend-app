@@ -5,7 +5,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 ## APIs
 
 ### 1. Signup New User
-- **Endpoint:** POST /auth/signup/
+- **Endpoint:** POST v1/auth/signup/
 - **Payload:**
     ```json
     {
@@ -17,14 +17,14 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 - **Response:**
     ```json
     {
-        "id": "f9e66f4b-146a-4850-adda-1a73fadac72d",
+        "id": "<user_id>",
         "username": "shihab",
         "email": "shihab@gmail.com"
     }
     ```
 
 ### 2. Login
-- **Endpoint:** POST /auth/login/
+- **Endpoint:** POST v1/auth/login/
 - **Payload:**
     ```json
     {
@@ -41,7 +41,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```
 
 ### 3. Refresh Token
-- **Endpoint:** POST /auth/refresh/
+- **Endpoint:** POST v1/auth/refresh/
 - **Payload:**
     ```json
     {
@@ -57,7 +57,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```
 
 ### 4. Convert Between Currencies
-- **Endpoint:** POST /exchange-rate/create-user-conversion-rate/
+- **Endpoint:** POST v1/exchange-rate/create-user-conversion-rate/
 - **Authorization:** Bearer \<access_token\>
 - **Payload:**
     ```json
@@ -82,7 +82,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```
 
 ### 5. Fetch User Conversion Rates
-- **Endpoint:** GET /exchange-rate/get-user-conversion-rates/
+- **Endpoint:** GET v1/exchange-rate/get-user-conversion-rates/
 - **Authorization:** Bearer \<access_token\>
 - **Payload:**
     ```json
@@ -118,7 +118,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```
 
 ### 6. Fetch OMR Conversion Rates
-- **Endpoint:** GET /exchange-rate/get-omr-saved-conversion-rates/
+- **Endpoint:** GET v1/exchange-rate/get-omr-saved-conversion-rates/
 - **Authorization:** Bearer \<access_token\>
 - **Payload:**
     ```json

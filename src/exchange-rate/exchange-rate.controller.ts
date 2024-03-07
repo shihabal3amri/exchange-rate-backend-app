@@ -8,7 +8,7 @@ import { GetUser } from 'src/authentication/get-user.decorator';
 import { Pagination } from 'src/common/pagination';
 
 @UseGuards(JwtAuthGuard)
-@Controller('exchange-rate')
+@Controller('v1/exchange-rate')
 export class ExchangeRateController {
   constructor(private readonly exchangeRateService: ExchangeRateService) {}
   

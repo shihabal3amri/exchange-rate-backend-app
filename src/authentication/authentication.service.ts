@@ -13,6 +13,30 @@ export class AuthenticationService {
 
   async signup(username: string, email: string, plainTextPassword: string) {
     const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
+
+    
+    // Check if username already exists
+    const existingUsername = await this.prismaService.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (existingUsername) {
+      throw new HttpException('Username already exists', HttpStatus.BAD_REQUEST);
+    }
+
+    // Check if email already exists
+    const existingEmail = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingEmail) {
+      throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
+    }
+    
     const user = await this.prismaService.user.create({
       data: {
         username,
