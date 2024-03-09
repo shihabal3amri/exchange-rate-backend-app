@@ -17,7 +17,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 - **Response:**
     ```json
     {
-        "id": "<user_id>",
+        "id": "<userId>",
         "username": "shihab",
         "email": "shihab@gmail.com"
     }
@@ -70,8 +70,8 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 - **Response:**
     ```json
     {
-        "id": "<conversion_id>",
-        "userId": "<user_id>",
+        "id": "<conversionId>",
+        "userId": "<userId>",
         "fromCurrency": "OMR",
         "toCurrency": "USD",
         "amount": 1,
@@ -95,8 +95,8 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```json
     [
         {
-            "id": "<conversion_id>",
-            "userId": "<user_id>",
+            "id": "<conversionId>",
+            "userId": "<userId>",
             "fromCurrency": "OMR",
             "toCurrency": "EUR",
             "amount": 1,
@@ -105,8 +105,8 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
             "updatedAt": "2024-03-06T21:31:49.528Z"
         },
         {
-            "id": "<conversion_id>",
-            "userId": "<user_id>",
+            "id": "<conversionId>",
+            "userId": "<userId>",
             "fromCurrency": "OMR",
             "toCurrency": "USD",
             "amount": 1,
@@ -131,7 +131,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```json
     [
         {
-            "id": "<conversion_id>",
+            "id": "<conversionId>",
             "fromCurrency": "OMR",
             "toCurrency": "ZWL",
             "rate": 40698.5467,
@@ -139,7 +139,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
             "updatedAt": "2024-03-06T21:36:00.448Z"
         },
         {
-            "id": "<conversion_id>",
+            "id": "<conversionId>",
             "fromCurrency": "OMR",
             "toCurrency": "ZMW",
             "rate": 61.8994,
@@ -147,7 +147,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
             "updatedAt": "2024-03-06T21:36:00.448Z"
         },
         {
-            "id": "<conversion_id>",
+            "id": "<conversionId>",
             "fromCurrency": "OMR",
             "toCurrency": "ZAR",
             "rate": 49.3646,
@@ -155,7 +155,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
             "updatedAt": "2024-03-06T21:36:00.448Z"
         },
         {
-            "id": "<conversion_id>",
+            "id": "<conversionId>",
             "fromCurrency": "OMR",
             "toCurrency": "YER",
             "rate": 650.8704,
@@ -163,7 +163,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
             "updatedAt": "2024-03-06T21:36:00.448Z"
         },
         {
-            "id": "<conversion_id>",
+            "id": "<conversionId>",
             "fromCurrency": "OMR",
             "toCurrency": "XPF",
             "rate": 285.9454,
