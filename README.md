@@ -52,7 +52,7 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
     ```json
     {
         "accessToken": "<newAccessToken>",
-        "refresh_token": "<newRefreshToken>"
+        "refreshToken": "<newRefreshToken>"
     }
     ```
 
