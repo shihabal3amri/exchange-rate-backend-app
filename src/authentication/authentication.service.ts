@@ -71,10 +71,11 @@ export class AuthenticationService {
 
     // Generate a cryptographically secure random string
     const randomString = crypto.randomBytes(32).toString('hex');
+    const refreshTokenUUID = crypto.randomUUID();
 
     const accessTokenPayload = { username: user.username, sub: user.id };
     const accessToken = this.jwtService.sign(accessTokenPayload, { secret: process.env.ACCESS_TOKEN_SECRET });
-    const refreshTokenPayload = { ...accessTokenPayload, rnd: randomString };
+    const refreshTokenPayload = { ...accessTokenPayload, rnd: randomString, id: refreshTokenUUID};
     const refreshToken = this.jwtService.sign(refreshTokenPayload, { secret: process.env.REFRESH_TOKEN_SECRET, expiresIn: REFRESH_TOKEN_EXPIRATION });
 
     // Hash the combination of userId and randomString
@@ -82,9 +83,16 @@ export class AuthenticationService {
     const hashedRefreshToken = await bcrypt.hash(hashInput, 10);
 
     // Store the hashed refresh token in the database
-    await this.prismaService.user.update({
-      where: { id: user.id },
-      data: { refreshToken: hashedRefreshToken },
+    await this.prismaService.refreshToken.create({
+      data: {
+        id: refreshTokenUUID,
+        token: hashedRefreshToken,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
     });
 
     return {
@@ -97,19 +105,25 @@ export class AuthenticationService {
     try {
       const payload = this.jwtService.verify(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
       // Extract user ID and randomString from the token payload
-      if (!payload.sub || !payload.rnd) {
+      if (!payload.sub || !payload.rnd || !payload.id) {
         throw new HttpException('Authentication failed', HttpStatus.UNAUTHORIZED);
       }
+
+
 
       // Generate the hash input from the user ID and the extracted randomString
       const hashInput = `${payload.sub}-${payload.rnd}`;
 
       // Verify if the token matches the one stored in the database
-      const user = await this.prismaService.user.findUnique({
-        where: { id: payload.sub },
+      const refreshTokenInDb = await this.prismaService.refreshToken.findFirst({
+        where: {
+          id: payload.id,
+          userId: payload.sub,
+          isArchived: false,
+        },
       });
 
-      if (!user || !(await bcrypt.compare(hashInput, user.refreshToken))) {
+      if (!refreshTokenInDb || !(await bcrypt.compare(hashInput, refreshTokenInDb.token))) {
         throw new HttpException('Authentication failed', HttpStatus.UNAUTHORIZED);
       }
 
@@ -120,19 +134,40 @@ export class AuthenticationService {
 
       // Generate a cryptographically secure random string
       const randomString = crypto.randomBytes(32).toString('hex');
-      
+      const refreshTokenUUID = crypto.randomUUID();
+
       // Generate new tokens
       const newAccessToken = this.jwtService.sign(newPayload, { secret: process.env.ACCESS_TOKEN_SECRET });
-      const newRefreshToken = this.jwtService.sign({...newPayload, rnd: randomString}, { secret: process.env.REFRESH_TOKEN_SECRET, expiresIn: REFRESH_TOKEN_EXPIRATION });
-      
+      const newRefreshToken = this.jwtService.sign({ ...newPayload, rnd: randomString, id: refreshTokenUUID }, { secret: process.env.REFRESH_TOKEN_SECRET, expiresIn: REFRESH_TOKEN_EXPIRATION });
+
       // Hash the combination of userId and randomString
-      const newHashInput = `${user.id}-${randomString}`;
+      const newHashInput = `${refreshTokenInDb.userId}-${randomString}`;
       const hashedNewRefreshToken = await bcrypt.hash(newHashInput, 10);
 
-      // Update the refresh token in the database
-      await this.prismaService.user.update({
-        where: { id: user.id },
-        data: { refreshToken: hashedNewRefreshToken },
+      await this.prismaService.$transaction(async (tx) => {
+        // archive the refresh token in the database
+        await tx.refreshToken.update({
+          where: {
+            id: refreshTokenInDb.id,
+          },
+          data: {
+            isArchived: true,
+            archivedAt: new Date(),
+          },
+        });
+
+        // Store the new hashed refresh token in the database
+        await tx.refreshToken.create({
+          data: {
+            id: refreshTokenUUID,
+            token: hashedNewRefreshToken,
+            user: {
+              connect: {
+                id: refreshTokenInDb.userId,
+              },
+            },
+          },
+        });
       });
 
       return {
