@@ -35,8 +35,8 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 - **Response:**
     ```json
     {
-        "access_token": "<access_token>",
-        "refresh_token": "<refresh_token>"
+        "accessToken": "<accessToken>",
+        "refreshToken": "<refreshToken>"
     }
     ```
 
@@ -45,14 +45,14 @@ This app fetches data from the ExchangeRate-API every 3 minutes and saves conver
 - **Payload:**
     ```json
     {
-        "refresh_token": "<refresh_token>"
+        "refreshToken": "<refreshToken>"
     }
     ```
 - **Response:**
     ```json
     {
-        "access_token": "<new_access_token>",
-        "refresh_token": "<new_refresh_token>"
+        "accessToken": "<newAccessToken>",
+        "refresh_token": "<newRefreshToken>"
     }
     ```
 

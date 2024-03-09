@@ -63,11 +63,11 @@ export class AuthenticationService {
     return null;
   }
 
-  private async generateTokens(userName: string, userId: string) {
+  private async generateTokens(username: string, userId: string) {
     // Generate a cryptographically secure random string
     const randomString = crypto.randomBytes(32).toString('hex');
     const refreshTokenId = crypto.randomUUID();
-    const accessTokenPayload = { username: userName, sub: userId };
+    const accessTokenPayload = { username, sub: userId };
     const accessToken = this.jwtService.sign(accessTokenPayload, { secret: process.env.ACCESS_TOKEN_SECRET });
     const refreshToken = this.jwtService.sign({ ...accessTokenPayload, rnd: randomString, id: refreshTokenId }, { secret: process.env.REFRESH_TOKEN_SECRET, expiresIn: REFRESH_TOKEN_EXPIRATION });
     // Hash the combination of userId and randomString
