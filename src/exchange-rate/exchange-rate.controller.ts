@@ -18,17 +18,17 @@ export class ExchangeRateController {
   }
   
   @Post('create-user-conversion-rate')
-  createUserConversionRate(@GetUser() userId: string, @Body() createUserConversionRateDto: CreateUserConversionRateDto): Promise<UserConversion> {
-    return this.exchangeRateService.createUserConversionRate(createUserConversionRateDto, userId);
+  async createUserConversionRate(@GetUser() userId: string, @Body() createUserConversionRateDto: CreateUserConversionRateDto): Promise<UserConversion> {
+    return await this.exchangeRateService.createUserConversionRate(createUserConversionRateDto, userId);
   }
 
   @Get('get-user-conversion-rates')
-  getUserConversionRates(@GetUser() userId: string, @Body() pagination: Pagination): Promise<UserConversion[]> {
-    return this.exchangeRateService.getUserConversionRates(userId, pagination);
+  async getUserConversionRates(@GetUser() userId: string, @Body() pagination: Pagination): Promise<UserConversion[]> {
+    return await this.exchangeRateService.getUserConversionRates(userId, pagination);
   }
 
   @Get('get-omr-saved-conversion-rates')
-  getOmrSavedConversionRates(@Body() pagination: Pagination): Promise<ConversionRate[]> {
-    return this.exchangeRateService.getOmrSavedConversionRates(pagination);
+  async getOmrSavedConversionRates(@Body() pagination: Pagination): Promise<ConversionRate[]> {
+    return await this.exchangeRateService.getOmrSavedConversionRates(pagination);
   }
 }
